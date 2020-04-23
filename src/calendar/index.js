@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, ViewPropTypes} from 'react-native';
+import {View, ViewPropTypes, Image, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
 
@@ -289,10 +289,13 @@ class Calendar extends Component {
   render() {
     const days = dateutils.page(this.state.currentMonth, this.props.firstDay);
     const weeks = [];
-    while (days.length) {
-      weeks.push(this.renderWeek(days.splice(0, 7), weeks.length));
+    if(!this.props.rowScroll){
+      while (days.length) {
+        weeks.push(this.renderWeek(days.splice(0, 7), weeks.length));
+      }
+    } else {
+      weeks.push(this.renderWeek(days.splice(0, 7), weeks.length))
     }
-
     let indicator;
     const current = parseDate(this.props.current);
     if (current) {
@@ -329,7 +332,21 @@ class Calendar extends Component {
           disableArrowLeft={this.props.disableArrowLeft}
           disableArrowRight={this.props.disableArrowRight}
         />
-        <View style={this.style.monthView}>{weeks}</View>
+     
+        <View style={this.style.monthView}>
+          {this.props.iconLeft &&
+            <TouchableOpacity>
+              <Image style={this.props.styleIcon} source={this.props.iconLeft}/>
+            </TouchableOpacity>
+          }
+          {weeks}
+          {this.props.iconRight && 
+            <TouchableOpacity>
+              <Image style={this.props.styleIcon} source={this.props.iconRight}/>
+            </TouchableOpacity>
+          }
+          </View>
+
       </View>);
   }
 }
