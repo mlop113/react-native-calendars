@@ -25,7 +25,7 @@ class Day extends Component {
 
   constructor(props) {
     super(props);
-    
+
     this.theme = {...defaultStyle, ...(props.theme || {})};
     this.style = styleConstructor(props.theme);
     
@@ -97,6 +97,11 @@ class Day extends Component {
           color
         };
       }
+      if (next.noon) {
+        prev.noon = {
+          noon: true
+        };
+      }
       if (!next.startingDay && !next.endingDay) {
         prev.day = {
           color
@@ -131,6 +136,7 @@ class Day extends Component {
       });
 
       const flags = this.markingStyle;
+      console.log(flags)
       if (flags.textStyle) {
         textStyle.push(flags.textStyle);
       }
@@ -143,35 +149,107 @@ class Day extends Component {
       if (flags.rightFillerStyle) {
         rightFillerStyle.backgroundColor = flags.rightFillerStyle;
       }
+////
+///
+////
 
       if (flags.startingDay && !flags.endingDay) {
         leftFillerStyle = {
           backgroundColor: this.theme.calendarBackground
         };
         rightFillerStyle = {
-          backgroundColor: flags.startingDay.color
+          backgroundColor: flags.startingDay.color,
+          // backgroundColor: 'white',
+          // borderTopWidth: 1,
+          // borderBottomWidth: 1,
+          // borderColor: flags.startingDay.color
         };
         containerStyle.push({
-          backgroundColor: 'black'
-          // flags.startingDay.color
+          backgroundColor: flags.startingDay.color
+        })
+      } 
+      if (flags.startingDay && !flags.endingDay && flags.noon) {
+        leftFillerStyle = {
+          backgroundColor: this.theme.calendarBackground
+        };
+        rightFillerStyle = {
+          // backgroundColor: flags.startingDay.color,
+          backgroundColor: 'white',
+          borderTopWidth: 1,
+          borderBottomWidth: 1,
+          borderColor: flags.startingDay.color
+        };
+        containerStyle.push({
+          // backgroundColor: flags.startingDay.color
         });
-      } else if (flags.endingDay && !flags.startingDay) {
+      } else if (flags.endingDay && !flags.startingDay && !flags.noon) {
         rightFillerStyle = {
           backgroundColor: this.theme.calendarBackground
         };
         leftFillerStyle = {
+          // borderColor: flags.endingDay.color,
+          // borderTopWidth: 1,
+          // borderBottomWidth: 1
           backgroundColor: flags.endingDay.color
         };
         containerStyle.push({
-          backgroundColor: 'black'
-          // flags.endingDay.color
+          // borderColor: flags.endingDay.color,
+          // borderTopLeftRadius: 0,
+          // borderBottomLeftRadius: 0,
+          // borderRightWidth: 1,
+          // borderTopWidth: 1,
+          // borderBottomWidth: 1,
+          backgroundColor: flags.endingDay.color
         });
-      } else if (flags.day) {
+      } 
+      if (flags.endingDay && !flags.startingDay && flags.noon) {
+        rightFillerStyle = {
+          backgroundColor: this.theme.calendarBackground
+        };
+        leftFillerStyle = {
+          borderColor: flags.endingDay.color,
+          borderTopWidth: 1,
+          borderBottomWidth: 1
+          // backgroundColor: flags.endingDay.color
+        };
+        containerStyle.push({
+          borderColor: flags.endingDay.color,
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0,
+          borderRightWidth: 1,
+          borderTopWidth: 1,
+          borderBottomWidth: 1,
+          // backgroundColor: flags.endingDay.color
+        });   
+      }
+      else if (flags.day && !flags.noon) {
         leftFillerStyle = {backgroundColor: flags.day.color};
         rightFillerStyle = {backgroundColor: flags.day.color};
         // #177 bug
-        fillerStyle = {backgroundColor: flags.day.color};
-      } else if (flags.endingDay && flags.startingDay) {
+        fillerStyle = {
+          // backgroundColor: 'white',
+          // borderTopWidth: 1,
+          // borderBottomWidth: 1,
+          // borderColor: flags.day.color
+          backgroundColor: flags.day.color
+        };
+      } 
+      if (flags.day && flags.noon) {
+        // leftFillerStyle = {backgroundColor: flags.day.color};
+        // rightFillerStyle = {backgroundColor: flags.day.color};
+        // #177 bug
+        fillerStyle = {
+          backgroundColor: 'white',
+          borderTopWidth: 1,
+          borderBottomWidth: 1,
+          borderColor: flags.day.color
+          // backgroundColor: flags.day.color
+        };
+      } 
+       ////
+///
+///
+      else if (flags.endingDay && flags.startingDay) {
         rightFillerStyle = {
           backgroundColor: this.theme.calendarBackground
         };
@@ -179,8 +257,7 @@ class Day extends Component {
           backgroundColor: this.theme.calendarBackground
         };
         containerStyle.push({
-          backgroundColor: 'black'
-          //  flags.endingDay.color
+          backgroundColor: flags.endingDay.color
         });
       }
 

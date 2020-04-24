@@ -162,6 +162,7 @@ class Calendar extends Component {
     const minDate = parseDate(this.props.minDate);
     const maxDate = parseDate(this.props.maxDate);
     let state = '';
+    const current = parseDate(this.props.current);
     if (this.props.disabledByDefault) {
       state = 'disabled';
     } else if ((minDate && !dateutils.isGTE(day, minDate)) || (maxDate && !dateutils.isLTE(day, maxDate))) {
@@ -170,6 +171,8 @@ class Calendar extends Component {
       state = 'disabled';
     } else if (dateutils.sameDate(day, XDate())) {
       state = 'today';
+    } else if (this.props.rowScroll && day.getDate() < current.getDate()) {
+      state = 'disabled';
     }
 
     if (!dateutils.sameMonth(day, this.state.currentMonth) && this.props.hideExtraDays) {
@@ -221,6 +224,9 @@ class Calendar extends Component {
     } 
     if (marking.endingDay) {
       label += 'period end ';
+    }
+    if (marking.noon) {
+      label += 'noon ';
     }
     if (marking.disabled || marking.disableTouchEvent) {
       label += 'disabled ';
@@ -288,16 +294,17 @@ class Calendar extends Component {
 
   render() {
     const days = dateutils.page(this.state.currentMonth, this.props.firstDay);
+   
     const weeks = [];
+    let indicator;
+    const current = parseDate(this.props.current);
     if(!this.props.rowScroll){
       while (days.length) {
         weeks.push(this.renderWeek(days.splice(0, 7), weeks.length));
       }
     } else {
-      weeks.push(this.renderWeek(days.splice(0, 7), weeks.length))
+      weeks.push(this.renderWeek(days.splice(current.getDate() - 1, 7), weeks.length))
     }
-    let indicator;
-    const current = parseDate(this.props.current);
     if (current) {
       const lastMonthOfDay = current.clone().addMonths(1, true).setDate(1).addDays(-1).toString('yyyy-MM-dd');
       if (this.props.displayLoadingIndicator &&
