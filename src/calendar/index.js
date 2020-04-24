@@ -29,6 +29,7 @@ class Calendar extends Component {
   static displayName = 'Calendar';
 
   static propTypes = {
+    rowScroll: PropTypes.bool,
     /** Specify theme properties to override specific styles for calendar parts. Default = {} */
     theme: PropTypes.object,
     /** Collection of dates that have to be marked. Default = {} */
@@ -304,7 +305,10 @@ class Calendar extends Component {
       }
     } else {
       weeks.push(this.renderWeek(days.splice(current.getDate() - 1, 7), weeks.length))
+      console.log('days', current.getDate() -1)
+      console.log('week', days.splice(current.getDate() - 1, 7))
     }
+    // console.log(weeks)
     if (current) {
       const lastMonthOfDay = current.clone().addMonths(1, true).setDate(1).addDays(-1).toString('yyyy-MM-dd');
       if (this.props.displayLoadingIndicator &&
@@ -342,13 +346,13 @@ class Calendar extends Component {
      
         <View style={this.style.monthView}>
           {this.props.iconLeft &&
-            <TouchableOpacity>
+            <TouchableOpacity onPress ={this.props.onPressIconLeft}>
               <Image style={this.props.styleIcon} source={this.props.iconLeft}/>
             </TouchableOpacity>
           }
           {weeks}
           {this.props.iconRight && 
-            <TouchableOpacity>
+            <TouchableOpacity  onPress ={this.props.onPressIconRight}>
               <Image style={this.props.styleIcon} source={this.props.iconRight}/>
             </TouchableOpacity>
           }

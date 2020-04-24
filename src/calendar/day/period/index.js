@@ -136,7 +136,7 @@ class Day extends Component {
       });
 
       const flags = this.markingStyle;
-      console.log(flags)
+      // console.log(flags)
       if (flags.textStyle) {
         textStyle.push(flags.textStyle);
       }
